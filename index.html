@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>איזה תדר את משדרת? | עינת אור</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink: #D4537E;
+    --pink-dark: #993556;
+    --pink-light: #FBEAF0;
+    --pink-mid: #ED93B1;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --bg: #fdf8f6;
+    --white: #ffffff;
+    --border: rgba(212, 83, 126, 0.15);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px;
+    right: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(212,83,126,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -200px;
+    left: -200px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(237,147,177,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+
+  .brand {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    font-weight: 300;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    box-shadow: 0 4px 40px rgba(212,83,126,0.06);
+  }
+
+  /* Progress */
+  .progress-wrap { margin-bottom: 1.75rem; }
+  .progress-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .progress-label { font-size: 12px; color: var(--text-muted); font-weight: 300; }
+  .progress-count { font-size: 13px; color: var(--pink); font-weight: 500; }
+  .progress-track { background: #f0e8ec; border-radius: 99px; height: 4px; overflow: hidden; }
+  .progress-fill {
+    height: 4px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--pink-mid), var(--pink));
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* Question */
+  .question-text {
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 1.55;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    background: #fdf8f6;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.1rem;
+    text-align: right;
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--text);
+    cursor: pointer;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 300;
+    transition: all 0.18s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+  .opt:hover {
+    border-color: var(--pink-mid);
+    background: var(--pink-light);
+    transform: translateX(-2px);
+  }
+  .opt:active { transform: scale(0.99); }
+  .opt-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid var(--pink-mid);
+    flex-shrink: 0;
+    transition: background 0.18s, border-color 0.18s;
+  }
+  .opt:hover .opt-dot {
+    background: var(--pink);
+    border-color: var(--pink);
+  }
+  .opt-text { flex: 1; text-align: right; }
+
+  .footer-note {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* Result */
+  .result-hero {
+    text-align: center;
+    padding-bottom: 1.75rem;
+    margin-bottom: 1.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .result-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--pink-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 24px;
+  }
+  .result-title {
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+  .result-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .section {
+    border-radius: var(--radius-sm);
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 0.875rem;
+  }
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .section-body { font-size: 14px; line-height: 1.75; font-weight: 300; }
+
+  .s1 { background: #EEF5FD; }
+  .s1 .section-title { color: #1a4a7a; }
+  .s1 .section-body { color: #245591; }
+
+  .s2 { background: #FDF0F0; }
+  .s2 .section-title { color: #7a1a1a; }
+  .s2 .section-body { color: #923030; }
+
+  .s3 { background: #FDF6EA; }
+  .s3 .section-title { color: #6b3a00; }
+  .s3 .section-body { color: #854f0b; }
+
+  .s4 { background: #EEF8EE; }
+  .s4 .section-title { color: #1a5a1a; }
+  .s4 .section-body { color: #2d6e2d; }
+
+  /* CTA */
+  .cta-wrap {
+    margin-top: 1.75rem;
+    background: var(--pink-light);
+    border: 1px solid var(--pink-mid);
+    border-radius: var(--radius-sm);
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .cta-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #4B1528;
+    margin-bottom: 0.6rem;
+  }
+  .cta-body {
+    font-size: 13.5px;
+    color: #72243E;
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 1.25rem;
+  }
+  .cta-btn {
+    display: inline-block;
+    background: var(--pink);
+    color: #fff;
+    font-family: 'Heebo', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 0.8rem 2.25rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.15s;
+  }
+  .cta-btn:hover { background: var(--pink-dark); transform: translateY(-1px); }
+  .cta-btn:active { transform: scale(0.98); }
+
+  .reset-btn {
+    display: block;
+    width: 100%;
+    margin-top: 0.875rem;
+    background: transparent;
+    border: 1px solid #ddd;
+    border-radius: var(--radius-sm);
+    padding: 0.65rem;
+    font-family: 'Heebo', sans-serif;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .reset-btn:hover { background: #f5f5f5; }
+
+  .hidden { display: none !important; }
+
+  /* Fade animation */
+  .fade-in { animation: fadeIn 0.3s ease forwards; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 480px) {
+    .card { padding: 1.5rem 1.25rem; }
+    .question-text { font-size: 17px; }
+    .opt { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="brand">עינת אור | קוד הזוגיות הנשמתית</div>
+
+  <div class="card" id="main-card">
+
+    <!-- QUIZ VIEW -->
+    <div id="quiz-view">
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span class="progress-label">איזה תדר את משדרת?</span>
+          <span class="progress-count" id="q-counter">1 / 10</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill" style="width:10%"></div>
+        </div>
+      </div>
+
+      <div class="question-text" id="q-text"></div>
+
+      <div class="options" id="options-list"></div>
+
+      <p class="footer-note">
+        השאלון יעזור לך לזהות את התדר שמושך אלייך גברים שלא מתאימים לך<br>
+        כדי שתוכלי לשנות אותו ולמשוך את הזיווג הנכון
+      </p>
+    </div>
+
+    <!-- RESULT VIEW -->
+    <div id="result-view" class="hidden">
+      <div class="result-hero">
+        <div class="result-icon">💗</div>
+        <div class="result-title" id="r-title"></div>
+        <div class="result-desc" id="r-desc"></div>
+      </div>
+
+      <div class="section s1">
+        <div class="section-title">✦ מה זה אומר עליך?</div>
+        <div class="section-body" id="r-explanation"></div>
+      </div>
+
+      <div class="section s2">
+        <div class="section-title">✦ האמונה שחוסמת אותך</div>
+        <div class="section-body" id="r-belief"></div>
+      </div>
+
+      <div class="section s3">
+        <div class="section-title">✦ איך זה משפיע על הדייטים שלך?</div>
+        <div class="section-body" id="r-impact"></div>
+      </div>
+
+      <div class="section s4">
+        <div class="section-title">✦ מה הפתרון?</div>
+        <div class="section-body" id="r-solution"></div>
+      </div>
+
+      <div class="cta-wrap">
+        <div class="cta-title">מוכנה לשנות את התדר שלך?</div>
+        <div class="cta-body">בתוכנית SOUL GPS נעבוד יחד על שינוי הקוד הרגשי שלך — כדי שתפסיקי למשוך את מה שלא מתאים, ותמשכי את הזיווג הנכון ומתאים לך.</div>
+        <a class="cta-btn" href="https://meditaionlove.ravpage.co.il/GPS" target="_blank">אני רוצה לשנות את התדר שלי ←</a>
+      </div>
+
+      <button class="reset-btn" onclick="resetQuiz()">מלאי את השאלון שוב</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const questions = [
+  { question:"גבר שאת מחבבת לא כותב לך יומיים. מה עובר בך?", options:[
+    {v:"neediness",t:"בודקת כל שעה אם הוא מחובר בוואטסאפ, שולחת הודעה נוספת — אי אפשר לשבת עם חוסר הוודאות"},
+    {v:"rejection",t:"מסיקה מיד 'הוא כנראה לא מעוניין' ומנסה להוציא אותו מהראש"},
+    {v:"selfabandonment",t:"עוברת שוב על השיחה האחרונה — מחפשת אם אמרת משהו לא בסדר"},
+    {v:"selfworth",t:"ממשיכה את היום, אבל בפנים חושבת 'לי זה לא יקרה אחרת'"},
+    {v:"intimacy",t:"מרגישה קצת הקלה מהמרחק — לא ממש אוהבת עוצמה גבוהה"}
+  ]},
+  { question:"דייט הלך מצוין. הוא שולח 'היה כיף!' ואז נעלם. את:", options:[
+    {v:"neediness",t:"שולחת הודעה ממשיכה — חייבת לשמר את החיבור, לא רוצה שיאבד"},
+    {v:"rejection",t:"חושבת 'ידעתי שזה לא יצא לכלום' ומוחקת אותו מהראש"},
+    {v:"selfabandonment",t:"תוהה אם לא הייתה מספיק עניינת / ספונטנית / שמחה בדייט"},
+    {v:"selfworth",t:"נשארת על זה כל היום, אבל לא אומרת כלום — לא רוצה להיראות 'נדחפת'"},
+    {v:"intimacy",t:"בעצם לא ממש מודאגת — ריחוק קצת עדיף על אינטנסיביות"}
+  ]},
+  { question:"הוא מציע להיפגש ב-22:00 בלילה, ואת עייפה. את:", options:[
+    {v:"neediness",t:"מסכימה כי לא רוצה שיחשוב שאת קשה — חשוב לך שיהיה מרוצה ממך"},
+    {v:"rejection",t:"מסכימה כי פוחדת שאם לא — הוא ימצא מישהי אחרת"},
+    {v:"selfabandonment",t:"מסכימה, ואחר כך כועסת על עצמך שלא אמרת לא — שוב"},
+    {v:"selfworth",t:"מסכימה בלי לחשוב — את רגילה לוותר, זה לא עניין גדול"},
+    {v:"intimacy",t:"מסכימה, ובסתר שמחה שזה מאוחר — כנראה יהיה קצר ולא אינטנסיבי"}
+  ]},
+  { question:"הוא אומר לך 'אני לא מחפש משהו רציני כרגע'. את:", options:[
+    {v:"neediness",t:"ממשיכה לפגוש אותו — בטח תוכלי לשנות את דעתו עם הזמן"},
+    {v:"rejection",t:"מרגישה שוב שאת לא 'מיוחדת מספיק' כדי שהוא ירצה רצינות דווקא איתך"},
+    {v:"selfabandonment",t:"מסכימה ומנמיכה ציפיות — 'אולי יצא מזה משהו לאט לאט'"},
+    {v:"selfworth",t:"נשארת — 'כנראה זה מה שמגיע לי עכשיו, אין מה לדרוש יותר'"},
+    {v:"intimacy",t:"מרגישה בסתר הקלה — גם את לא בטוחה שאת מוכנה לרצינות אמיתית"}
+  ]},
+  { question:"כשגבר מתחיל להתקרב ומראה עניין אמיתי ועקבי, את:", options:[
+    {v:"neediness",t:"נרגשת מאוד ומשקיעה הכל מיד — לא רוצה לפספס את 'החלון'"},
+    {v:"rejection",t:"מחכה בשקט 'למכה' — בטח בקרוב יאכזב, כמו תמיד"},
+    {v:"selfabandonment",t:"מתחילה להתאים את עצמך לסגנון שלו ולמה שנדמה לך שהוא אוהב"},
+    {v:"selfworth",t:"מרגישה שצריכה להתאמץ מאוד כדי שלא יאבד עניין"},
+    {v:"intimacy",t:"פתאום מתחילים להתגלות אצלו 'פגמים' שלא שמת לב אליהם לפני"}
+  ]},
+  { question:"לאחר שבועיים נהדרים, הוא נעשה פחות נוכח. את:", options:[
+    {v:"neediness",t:"מגדילה מאמצים — שולחת הומור, שאלות, תמונות — כל מה שיחזיר אותו"},
+    {v:"rejection",t:"מסיקה שהיית 'יותר מדי' ומנסה להיות פחות — לדבר פחות, לרגש פחות"},
+    {v:"selfabandonment",t:"בודקת מה השתנה בהתנהגות שלך ומנסה 'לתקן'"},
+    {v:"selfworth",t:"ממשיכה לחכות בשקט — לא רוצה להיות 'נדחפת' ולאבד אותו"},
+    {v:"intimacy",t:"מרגישה נחת — הלחץ ירד, ככה יותר נוח"}
+  ]},
+  { question:"כשאת חושבת על הגברים שחזרו שוב ושוב בחייך, הם היו:", options:[
+    {v:"neediness",t:"כריזמטיים שנותנים חום עז בהתחלה ואז 'נסוגים' — ואת תמיד רצת אחריהם"},
+    {v:"rejection",t:"גברים שבסוף תמיד הוכיחו שאת 'לא מספיקה' בשבילם"},
+    {v:"selfabandonment",t:"גברים שאת 'ניהלת' — תמיד נתת, דאגת, הסתגלת למה שהם צריכים"},
+    {v:"selfworth",t:"גברים שלא היית מאה אחוז מרוצה מהם, אבל 'מה הסיכוי שיהיה יותר טוב'"},
+    {v:"intimacy",t:"גברים שהיו קצת מחוץ להישג יד — חצי פנויים, גרים רחוק, לא-מוכנים-עכשיו"}
+  ]},
+  { question:"הוא שלח הודעה מחמיאה ואמיתית. מה קורה בפנים?", options:[
+    {v:"neediness",t:"פרחת — שומרת את ההודעה וחוזרת אליה שוב ושוב לאורך היום"},
+    {v:"rejection",t:"חשדנית קצת — 'מה הוא רוצה? בטח יאכזב בהמשך'"},
+    {v:"selfabandonment",t:"שמחה, אבל מיד חושבת 'מה לענות שיוסיף לו שמחה'"},
+    {v:"selfworth",t:"קצת מופתעת — לא רגילה שרואים אותך ככה, זה לא מוכר"},
+    {v:"intimacy",t:"מתביכת ומסיטה את הנושא — קשה לקבל מחמאה כל כך ישירה"}
+  ]},
+  { question:"חברה אומרת לך: 'את שמה את הרגשות שלו לפני שלך'. את:", options:[
+    {v:"neediness",t:"מגנה את עצמך — 'לא, אני רק לא רוצה שהוא יחשוב שאני קשה'"},
+    {v:"rejection",t:"חושבת שאם לא תשמי אותו ראשון — הוא בכלל לא יישאר"},
+    {v:"selfabandonment",t:"יודעת שהיא צודקת, אבל לא יודעת איך לנהוג אחרת"},
+    {v:"selfworth",t:"מאמינה שזה מה שצריך — 'מי שלא נותנת לא שומרת'"},
+    {v:"intimacy",t:"מגיבה 'זה לא רציני, אנחנו לא עד שם' ומנתבת לנושא אחר"}
+  ]},
+  { question:"מה המשפט שעובר לך בראש לפני שאת שולחת הודעה לגבר?", options:[
+    {v:"neediness",t:"'מה הוא יחשוב עלי? האם זה יגרום לו לאהוב אותי יותר?'"},
+    {v:"rejection",t:"'אולי זה יותר מדי — אולי אני דוחה אותו בלי לדעת'"},
+    {v:"selfabandonment",t:"'איך לנסח את זה כדי שיגרום לו לרצות עוד?'"},
+    {v:"selfworth",t:"'אין לי ברירה, אני חייבת לדעת — אשלח גם אם זה לא נראה טוב'"},
+    {v:"intimacy",t:"'אולי עדיף שלא — שישמרו על מרחק קצת'"}
+  ]}
+];
+
+const profiles = {
+  neediness:{title:"תדר הנזקקות — הצמאה לאישור",desc:"את משדרת תדר של רעב רגשי שמושך גברים שנותנים חום — ואז נסוגים",explanation:"הקוד הרגשי שלך משדר: 'אני זקוקה לאישור שלך כדי להרגיש שלמה'. זה מושך גברים שנותנים חום ותשומת לב עזה בהתחלה — ואז נסוגים. הם חשים את הצמא שלך, גם כשאת מנסה להסתיר אותו — וריחוקם רק מגדיל אותו.",belief:"'אני שלמה רק כשהוא מאשר אותי. בלי האישור שלו — אני לא מספיקה'",impact:"בגלל זה את בודקת כל הזמן אם הוא מחובר, שולחת הודעה 'סתם לבדוק', ומרגישה ריקה כשיש שקט. הגברים שמגיעים אלייך יודעים לתת ולקחת — ונהנים מהרדיפה.",solution:"הפתרון הוא לבנות מקור אישור פנימי. לפני כל פנייה אליו — שאלי: 'מה אני מחפשת? האם אני יכולה לתת את זה לעצמי?' כשהתדר שלך ישתנה ל'אני מלאה בתוך עצמי' — תמשכי גברים שרוצים לתת, לא לקחת."},
+  rejection:{title:"תדר פחד הדחייה — המחכה לאכזבה",desc:"את משדרת תדר שמושך גברים שמאשרים שוב ושוב: 'את לא מספיקה'",explanation:"הקוד הרגשי שלך משדר: 'כנראה שבסוף הוא ידחה אותי'. המוח שלך למד מניסיון ישן שדחייה היא בלתי נמנעת — ואז הוא מחפש 'הוכחות' בכל מקום: בשקט שלו, בהודעה הקצרה, בפגישה שבוטלה. את קוראת דחייה גם כשאין.",belief:"'אם הוא יכיר אותי באמת — הוא יעזוב. עדיף שאצפה לזה מראש'",impact:"בגלל זה את מנמיכה ציפיות 'בשביל הבטיחות', שומרת מרחק רגשי, ומפרשת כל סימן ניטרלי כדחייה. הגברים שמגיעים אלייך הם אלה שמאשרים את האמונה — ולא מסוגלים לתת את הקרבה שאת צריכה.",solution:"הפתרון הוא לזהות את הפצע הראשון: מתי בחייך למדת שאת 'לא מספיקה'? כשתרפאי את השורש — התדר ישתנה, ותמשכי גברים שרואים אותך ורוצים להישאר."},
+  selfabandonment:{title:"תדר ביטול עצמי — המאבדת את עצמה",desc:"את משדרת תדר שמושך גברים שלוקחים הרבה ונותנים מעט",explanation:"הקוד הרגשי שלך משדר: 'אם אתאים את עצמי — הוא יאהב אותי'. אז את מוחקת צרכים, מסכימה לדברים שלא מתאימים לך, ומשאירה מעט מ'עצמך האמיתי' בחדר. הבעיה? גברים לא מתאהבים בבבואה — הם מתאהבים באישה עם פנים.",belief:"'אם אהיה עצמי — לא ירצו אותי. האהבה מגיעה רק למי שמתאימה ומסכימה'",impact:"בגלל זה את מוצאת את עצמך כועסת בשקט, מרגישה לא נראית, וחשה שהיחסים הם בעצם מיטוי של הצרכים שלו בלבד. הגברים שמגיעים אלייך לומדים מהר שתמיד תסכימי — ולא חשים צורך להתאמץ.",solution:"הפתרון הוא לחזור לעצמך בצעדים קטנים: פעם ביום — אמרי דעה שונה. שאלי לפני כל 'כן': 'האם אני רוצה את זה, או רוצה שהוא יאהב אותי?' כשתחזרי לעצמך — תמשכי גברים שמתאהבים בך, לא במה שנוח להם."},
+  selfworth:{title:"תדר חוסר הערך — הממתינה לפירורים",desc:"את משדרת תדר שמושך גברים שנותנים 'מספיק' — לא פחות, לא יותר",explanation:"הקוד הרגשי שלך משדר: 'אני לא בטוחה שמגיע לי יותר מזה'. אז את נשארת עם גברים שלא לגמרי מתאימים, מפחדת לבקש יותר, ולא מאמינה שזוגיות שבה את נבחרת לגמרי — היא אפשרית עבורך.",belief:"'מי אני שאבקש יותר? כנראה שזה הכי טוב שיש לי ואני צריכה להסתפק בזה'",impact:"בגלל זה את נשארת יותר מדי זמן עם מי שלא מתאים, לא מעלה צרכים מחשש ש'תבריחי', ומסתפקת בפירורים של קשב ואהבה. ביחסים שלך יש שקט — אבל לא עומק.",solution:"הפתרון הוא לשנות את 'עמדת הבסיס': לצאת לכל דייט כאישה שבוחרת — לא כאישה שנבחנת. כתבי ללא צנזורה מה את רוצה מגבר. קראי את זה בקול. כשתאמיני שמגיע לך — תמשכי מי שמוכן לתת."},
+  intimacy:{title:"תדר הפחד מקרבה — הנמשכת למה שבטוח מרחוק",desc:"את משדרת תדר שמושך גברים שלא יכולים לתת לגמרי — וזה לא מקרי",explanation:"הקוד הרגשי שלך משדר: 'קרבה אמיתית מסוכנת'. אז את מושכת אלייך גברים שלא זמינים לגמרי — חצי פנויים, גרים רחוק, לא-מוכנים-עכשיו — כי הם מאפשרים לך לרצות בלי לסכן. כשמישהו פנוי ורציני ניגש — פתאום הוא 'לא מספיק מעניין'.",belief:"'אם מישהו יכיר אותי מקרוב — הוא יתאכזב. מוטב לשמור מרחק בטוח'",impact:"בגלל זה את נמשכת דווקא למה שלא זמין, מרגישה חנק כשמישהו טוב ויציב ניגש, ומוצאת 'פגמים' בגברים שמכבדים ונותנים. הריחוק מרגיש בטוח — אבל הוא לא חיים.",solution:"הפתרון הוא להבין מתי קרבה הפכה לסכנה בחייך. שאלי ושבי עם התשובה: 'מה יקרה אם מישהו יאהב אותי באמת?' תרגלי קרבה קטנה — לאפשר לעצמך להיות פגיעה קצת, צעד קטן בכל פעם."}
+};
+
+let current = 0;
+let answers = {};
+
+function render() {
+  const q = questions[current];
+  document.getElementById('q-counter').textContent = `${current+1} / ${questions.length}`;
+  document.getElementById('progress-fill').style.width = `${((current+1)/questions.length)*100}%`;
+  const qEl = document.getElementById('q-text');
+  qEl.textContent = q.question;
+  qEl.classList.remove('fade-in');
+  void qEl.offsetWidth;
+  qEl.classList.add('fade-in');
+
+  const list = document.getElementById('options-list');
+  list.innerHTML = '';
+  list.classList.remove('fade-in');
+  void list.offsetWidth;
+  list.classList.add('fade-in');
+
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="opt-text">${opt.t}</span><span class="opt-dot"></span>`;
+    btn.onclick = () => pick(opt.v);
+    list.appendChild(btn);
+  });
+}
+
+function pick(val) {
+  answers[current] = val;
+  if (current < questions.length - 1) {
+    current++;
+    render();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  const counts = {};
+  Object.values(answers).forEach(a => { counts[a] = (counts[a]||0)+1; });
+  const top = Object.keys(counts).reduce((a,b) => counts[a] > counts[b] ? a : b);
+  const p = profiles[top];
+  document.getElementById('r-title').textContent = p.title;
+  document.getElementById('r-desc').textContent = p.desc;
+  document.getElementById('r-explanation').textContent = p.explanation;
+  document.getElementById('r-belief').textContent = p.belief;
+  document.getElementById('r-impact').textContent = p.impact;
+  document.getElementById('r-solution').textContent = p.solution;
+  document.getElementById('quiz-view').classList.add('hidden');
+  const rv = document.getElementById('result-view');
+  rv.classList.remove('hidden');
+  rv.classList.add('fade-in');
+}
+
+function resetQuiz() {
+  current = 0;
+  answers = {};
+  document.getElementById('result-view').classList.add('hidden');
+  document.getElementById('quiz-view').classList.remove('hidden');
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
